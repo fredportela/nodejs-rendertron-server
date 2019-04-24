@@ -8,7 +8,7 @@ const app = express();
 
 const port = 8080;
 
-const appUrl = `editais.datalegis.inf.br`;
+const appUrl = 'example.com';
 const renderUrl = 'https://render-tron.appspot.com/render';
 
 function generateUrl(request) {
