@@ -8,12 +8,12 @@ const app = express();
 
 const port = 8080;
 
-const appUrl = 'example.com';
+const appUrl = 'exemple.com';
 const renderUrl = 'https://render-tron.appspot.com/render';
 
 function generateUrl(request) {
     return url.format({
-        protocol: 'https', //request.protocol,
+        protocol: request.protocol,
         host: appUrl,
         pathname: request.originalUrl
     });
@@ -50,7 +50,6 @@ function detectBot(userAgent){
     return false;
 }
 
-
 app.get('*', (req, res) => {
     const isBot = detectBot(req.headers['user-agent']);
 
@@ -74,13 +73,13 @@ app.use(bodyParser.raw({ limit: '50mb' }));
 app.use(bodyParser.text({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
-app.listen(port, () => console.log(`http is started ${port}`));
-
 // Catch errors
 app.on('error', (error) => {
-  console.error(moment().format(), 'ERROR', error);
+    console.error(moment().format(), 'ERROR', error);
+});
+  
+process.on('uncaughtException', (error) => {
+    console.log(moment().format(), error);
 });
 
-process.on('uncaughtException', (error) => {
-  console.log(moment().format(), error);
-});
+app.listen(port, () => console.log(`http is started ${port}`));
