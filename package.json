@@ -1,5 +1,5 @@
 {
-  "name": "nodejs-angular-rendertron-server",
+  "name": "nodejs-rendertron-server",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
@@ -10,10 +10,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git://github.com/fredportela/nodejs-angular-rendertron-server"
+    "url": "git://github.com/fredportela/nodejs-rendertron-server"
   },
   "keywords": [
-    "angular",
+    "server",
     "nodejs",
     "rendertron",
     "seo"
