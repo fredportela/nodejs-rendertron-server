@@ -2,17 +2,19 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const fetch = require('node-fetch');
 const url = require('url');
+const fs = require('fs');
 const path = require('path');
 const moment = require('moment');
 const app = express();
 
 const port = 8080;
 
-const appUrl = 'exemple.com';
+const appUrl = 'localhost:4200';
 const renderUrl = 'https://render-tron.appspot.com/render';
 
 function generateUrl(request) {
     return url.format({
+        //protocol: 'https',
         protocol: request.protocol,
         host: appUrl,
         pathname: request.originalUrl
@@ -46,24 +48,31 @@ function detectBot(userAgent){
         }
     }
 
-    console.log('no bots found');
     return false;
 }
+
+const allowedExt = ['.js','.ico','.css','.png','.jpg','.gif','.woff2','.woff','.ttf','.svg'];
 
 app.get('*', (req, res) => {
     const isBot = detectBot(req.headers['user-agent']);
 
-    if (isBot) {
+    if (!isBot) {
         const botUrl = generateUrl(req);
         fetch(`${renderUrl}/${botUrl}`)
             .then(res => res.text())
             .then(body => {
+                console.log(botUrl);
                 res.set('Cache-Control', 'public, max-age=300, s-maxage=600');
                 res.set('Vary', 'User-Agent');
                 res.send(body.toString())
             });
-    } else {
-        res.sendFile(path.resolve('public/index.html'));
+    } 
+	else {
+        if (allowedExt.filter(ext => req.url.indexOf(ext) > 0).length > 0) {
+            res.sendFile(path.resolve(`public/${req.url}`));
+        } else {
+            res.sendFile(path.resolve('public/index.html'));
+        }
     }
 });
 
